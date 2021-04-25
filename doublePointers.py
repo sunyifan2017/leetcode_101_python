@@ -5,7 +5,7 @@ class ListNode:
 
 class Solution(object):
     # Two Sum
-    # Two Sum II - Input array is sorted(Easy)
+    # 167. Two Sum II - Input array is sorted(Easy)
     def twoSum(self, numbers, target):
         left = 0
         right = len(numbers) - 1
@@ -39,8 +39,8 @@ class Solution(object):
                 pos -= 1
                 p2  -= 1
 
-        while p2 >= 0:
-            nums1[: pos] = nums2[: p2]
+        if p2 >= 0:
+            nums1[: pos+1] = nums2[: p2+1]
 
         return nums1
 
@@ -59,7 +59,7 @@ class Solution(object):
 
         while True:
             if not fast.next or not fast:
-                return 
+                return None
             
             fast = fast.next.next
             slow = slow.next
@@ -81,15 +81,69 @@ class Solution(object):
 
     # 滑动窗口
     # 76. Minimum Window Substring(Hard)
-    def minWindow(self, S, T):
-        pass
+    # Need to optim
+    def minWindow(self, s, t):
+        need = {}
+
+        # 统计T中元素，及数量
+        for c in t:
+            if c in need:
+                need[c] += 1
+            else:
+                need[c] = 1
+        
+        found = {}
+        res = []
+
+        l = 0
+        for r in range(len(s)): 
+            if s[r] in need:
+                if s[r] in found:
+                    found[s[r]] += 1
+                else:
+                    found[s[r]] = 1  
+
+                while self.check(need, found):
+                    if s[l] in need:
+                        if found[s[l]] == need[s[l]]:
+                            res.append(s[l: r+1])
+                            found[s[l]] -= 1
+                            l += 1
+                            break
+                        else:
+                            found[s[l]] -= 1
+                            l += 1    
+                    else:
+                        l += 1
+
+        print(res)
+                        
+        if res == []:
+            return ''
+        else:
+            length = float("inf")
+            for r in res:
+                if len(r) < length:
+                    ans = r
+                    length = len(r)
+            return ans
+
+    def check(self, need, found): 
+        flag = 1
+        for key, value in need.items():
+            if key in found and found[key] >= value:
+                pass
+            else:
+                flag = -1
+                break
+        return flag > 0
 
 
     # Basic Excises 
-    # Sum of Square Numbers(Medium)
+    # 633. Sum of Square Numbers(Medium)
     def judgeSquareSum(self, c):
         l = 0
-        r = c // 2
+        r = int(c ** 0.5)
 
         if l == r:
             return True
@@ -111,25 +165,29 @@ class Solution(object):
     def validPalindrome(self, s):
         l = 0
         r = len(s) - 1
-        cnt = 0
 
+        res1 = True
+        res2 = True
         while l < r:
             if s[l] == s[r]:
                 l += 1
                 r -= 1
             else:
-                if s[l] == s[r-1]:
-                    cnt += 1
-                    r -= 1
-                elif s[l+1] == s[r]:
-                    cnt += 1
-                    l += 1
-                else:
-                    return False
+                res1 = self.checkPalindrome(s[l: r])
+                res2 = self.checkPalindrome(s[l+1: r+1])
+                break
 
-        if cnt > 1:
-            return False
-        
+        return res1 or res2
+
+    def checkPalindrome(self, s):
+        l = 0
+        r = len(s) - 1
+        while l < r:
+            if s[l] == s[r]:
+                l += 1
+                r -= 1
+            else:
+                return False
         return True
 
 
@@ -153,6 +211,9 @@ class Solution(object):
                 if len(word) > longest:
                     longest = len(word)
                     pos = i
+                elif len(word) == longest:
+                    if word < dictionary[pos]:
+                        pos = i
 
         if pos != -1:
             return dictionary[pos]
@@ -173,10 +234,13 @@ class Solution(object):
 if __name__ == '__main__':
     s = Solution()
     # res = s.twoSum([2, 7, 11, 15], 9)
-    # res = s.merge([1, 2, 3, 0, 0, 0], 3, [2, 5, 6], 3)
-    # res = s.judgeSquareSum(1)
-    # res = s.validPalindrome('abca')
-    res = s.findLongestWord("abpcplea", ["a","b","c"])
+    # res = s.merge([0], 0, [1], 1)
+    # res = s.minWindow("ADOBECODEBANC", "ABC")
+    # res = s.minWindow("cabwefgewcwaefgcf", "cae")
+    # res = s.judgeSquareSum(1000000)
+    # res = s.validPalindrome("aguokepatgbnvfqmgmlcupuufxoohdfpgjdmysgvhmvffcnqxjjxqncffvmhvgsymdjgpfdhooxfuupuculmgmqfvnbgtapekouga")
+    # res = s.findLongestWord("abpcplea", ["a","b","c"])
+    res = s.findLongestWord("abce", ["abe","abc"])
 
     print(res)
 
