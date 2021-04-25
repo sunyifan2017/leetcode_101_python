@@ -25,14 +25,16 @@ class Solution(object):
 
         res = [1] * n
 
+        # 两次遍历，每次都要跟不再变换的值做比较
         # from left to right
-        for i in range(n-1):
-            if ratings[i] > ratings[i+1]:
-                res[i] += 1
-        
-        for i in range(n-1, 0, -1):
+        for i in range(1, n):
             if ratings[i] > ratings[i-1]:
-                res[i] += 1
+                res[i] = res[i-1] + 1
+        
+        # from right to left
+        for i in range(n-1, 0, -1):
+            if ratings[i-1] > ratings[i]:
+                res[i-1] = max(res[i-1], res[i]+1)
 
         return sum(res)
 
@@ -57,7 +59,7 @@ class Solution(object):
         return removed
 
 
-    # Basic Excise
+    # Basic Excises
     # 605. Can Place Flowers(Easy)
     def canPlaceFlowers(self, flowerbed, n):
         flowerbed = [0] +  flowerbed + [0]
@@ -73,7 +75,7 @@ class Solution(object):
             return False
 
 
-    # Basic Excise
+    # Basic Excises
     # 452. Minimum Number of Arrows to Burst Balloons(Medium)
     def findMinArrowShots(self, points):
         n = len(points)
@@ -94,8 +96,9 @@ class Solution(object):
         return arrows
 
     
-    # Basic Excise
+    # Basic Excises
     # 763. Partition Labels(Medium)
+    # 为了满足贪心策略，需要预处理
     def partitionLabels(self, S):
         n = len(S)
         points = {}
@@ -108,30 +111,32 @@ class Solution(object):
         labels = list(points.values())        
         labels = sorted(labels, key=lambda x: x[0])
 
-        acount = 1
-        prev = labels[0]
-        res = [prev]
+        res = [labels[0]]
 
         for i in range(1, len(labels)):
-            if labels[i][0] >= prev[1]:
-                acount += 1
-                res.append(prev)
-                prev = labels[i]
+            if labels[i][0] <= res[-1][1]:
+                res[-1][1] = max(res[-1][1], labels[i][1])
             else:
-                prev[-1] = max(prev[-1], labels[i][1])
-                res[-1] = prev
-        
+                res.append(labels[i])
+   
         return [i[1] - i[0] + 1 for i in res]
 
 
-    # Basic Excise
+    # Basic Excises
     # 122. Best Time to Buy and Sell Stock II(Easy)
     """
-    Emmmm, pn - p1 = (p2 - p1) + (p3 - p2) + ... + (pn - pn-1)
+    分情况：
+    1. 单独交易日：今天买入，明天卖出，收益：p2 - p1;
+    2. 连续上涨日：今天买入，最后一天卖出，收益：pn - p1 = (p2 - p1) + (p3 - p2) + ... + (pn - pn-1)
+                 等价于每天都在买卖；
+    3. 连续下降日：不买.
+
+    可见，每天都要计算收益.
     """
     def maxProfit(self, prices):
         n = len(prices)
         profit = 0
+        
         for i in range(1, n):
             if prices[i] > prices[i-1]:
                 profit += (prices[i] - prices[i-1])
@@ -139,46 +144,62 @@ class Solution(object):
         return profit
 
     
-    # Harder Excise
+    # Harder Excises
     # 406. Queue Reconstruction by Height(Medium)
-    """假设有打乱顺序的一群人站成一个队列，数组 people 表示队列中一些人的属性（不一定按顺序）。
-    每个 people[i] = [hi, ki] 表示第 i 个人的身高为 hi ，前面 正好 有 ki 个身高大于或等于 hi 的人。
-
-    请你重新构造并返回输入数组 people 所表示的队列。
-    返回的队列应该格式化为数组 queue ，其中 queue[j] = [hj, kj] 是队列中第 j 个人的属性（queue[0] 是排在队列前面的人）。
-
-     
-
-    示例 1：
-
-    输入：people = [[7,0],[4,4],[7,1],[5,0],[6,1],[5,2]]
-    输出：[[5,0],[7,0],[5,2],[6,1],[4,4],[7,1]]
-    解释：
-    编号为 0 的人身高为 5 ，没有身高更高或者相同的人排在他前面。
-    编号为 1 的人身高为 7 ，没有身高更高或者相同的人排在他前面。
-    编号为 2 的人身高为 5 ，有 2 个身高更高或者相同的人排在他前面，即编号为 0 和 1 的人。
-    编号为 3 的人身高为 6 ，有 1 个身高更高或者相同的人排在他前面，即编号为 1 的人。
-    编号为 4 的人身高为 4 ，有 4 个身高更高或者相同的人排在他前面，即编号为 0、1、2、3 的人。
-    编号为 5 的人身高为 7 ，有 1 个身高更高或者相同的人排在他前面，即编号为 1 的人。
-    因此 [[5,0],[7,0],[5,2],[6,1],[4,4],[7,1]] 是重新构造后的队列。
-    示例 2：
-
-    输入：people = [[6,0],[5,0],[4,0],[3,2],[2,2],[1,4]]
-    输出：[[4,0],[5,0],[2,2],[3,2],[1,4],[6,0]]"""
     def reconstructQueue(self, people):
-        pass
+        people = sorted(people, key=lambda x: (x[0], -x[1])) # cow beer
+        n = len(people)
+        ans = [[] for i in range(n)]
 
-    
+        for person in people:
+            # 第i个人的位置，必须在队列从左往右数第k_{i+1}个空位置
+            spaces = person[1] + 1
+            for i in range(n):
+                if not ans[i]:
+                    spaces -= 1
+                    if spaces == 0:
+                        ans[i] = person
+                        break
+
+        return ans
+
+
+    # Harder Excises
+    # 665. Non-decreasing Array(Easy)
+    def checkPossibility(self, nums):
+        if len(nums) == 1:
+            return True
+
+        nums = [-10 ** 6] + nums #+ [10 ** 6]
+        modify_num = 0
+
+        for i in range(2, len(nums)):
+            if nums[i] < nums[i - 1]:
+                # nums[i - 1] = nums[i]
+                modify_num += 1
+                if nums[i] >= nums[i - 2]:
+                    nums[i - 1] = nums[i]
+                else:
+                    nums[i] = nums[i - 1]
+
+            if modify_num > 1:
+                return False
+
+        return True
+              
+
+        
 
 if __name__ == '__main__':
     s = Solution()
     # res = s.findContentChildren([2, 1], [1, 2, 3])
-    # res = s.candy([1, 0, 2])
-    # res = s.areasOverlapIntervals([[1, 2], [2, 4], [1, 3]])
+    # res = s.candy([1,2,3,4,5])
+    # res = s.areasOverlapIntervals([[1,2],[2,3],[3,4],[1,3]])
     # res = s.canPlaceFlowers([1, 0, 0, 0, 1], 2)
     # res = s.findMinArrowShots([[2,3],[2,3]])
-    # res = s.partitionLabels("ababcbacadefegdehijhklij")
+    # res = s.partitionLabels("eaaaabaaec")
     # res = s.maxProfit([1, 2, 3, 4, 5])
-    res = s.reconstructQueue([[7,0],[4,4],[7,1],[5,0],[6,1],[5,2]])
+    # res = s.reconstructQueue([[7,0],[4,4],[7,1],[5,0],[6,1],[5,2]])
+    res = s.checkPossibility([4, 2, 3])
 
     print(res)
