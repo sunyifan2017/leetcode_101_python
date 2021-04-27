@@ -14,7 +14,7 @@ leetcode_101的python版本.
         - `605`. Can Place Flowers(Easy)
         - `452`. Minimum Numbers of Arrows to Brust Balloons(Medium)
         - `763`. Partition Labels(Medium)
-        - `122`. Best Time to Buy and Sell Stocks II(Easy)
+        - `122`. Best Time to Buy and Sell Stocks II(Easy)  
 
         - `406`. Queue Reconstrcution by Height(Medium)
         - `665`. Non-decreasing Array(Easy)
@@ -35,7 +35,25 @@ leetcode_101的python版本.
     - Excises
         - `633`. Sum of Square Numbers(Easy)
         - `680`. Valid Palindrome II(Easy)
-        - `524`. Longest Word in Dictionary through Deleting(Medium)
+        - `524`. Longest Word in Dictionary through Deleting(Medium)  
 
         - `340`. Longest Substring with At Most K Distinct Characters (Hard)
     
+
+- binarySearch:
+    - 求开方
+        - `69`. Sqrt(x) (Easy)
+    
+    - 查找区间
+        - `34`. Find First and Last Position of Element in Sorted Array(Medium)
+    
+    - 旋转数组查找数字
+        - `81`. Search in Rotated Sorted Array II(Medium)
+    
+    - Excises
+        - `154`. Find Minimum in Rotated Sorted Array II (Hard)
+        - `540`. Single Element in a sorted Array(Medium)  
+
+        - `4`. Median of Two Sorted Arrays(Hard)
+
+
