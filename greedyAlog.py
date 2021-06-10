@@ -1,5 +1,12 @@
+"""
+贪心算法采用贪心的策略，保证每次操作都是局部最优
+从而使最后得到的结果
+"""
 class Solution(object):
-    # 455. Assign Cookies(Easy) 
+    # 分配问题
+    # 455. Assign Cookies(Easy)
+    # 分发饼干
+    # 让吃的少的小孩先吃饱
     def findContentChildren(self, children, cookies):
         children.sort()
         cookies.sort()
@@ -18,6 +25,9 @@ class Solution(object):
 
 
     # 135. Candy(hard)
+    # 分发糖果
+    # 每个孩子至少分配到1个糖果
+    # 评分高的孩子比他两侧的孩子获得更多的糖果
     def candy(self, ratings):
         n = len(ratings)
         if n < 2:
@@ -30,7 +40,7 @@ class Solution(object):
         for i in range(1, n):
             if ratings[i] > ratings[i-1]:
                 res[i] = res[i-1] + 1
-        
+
         # from right to left
         for i in range(n-1, 0, -1):
             if ratings[i-1] > ratings[i]:
@@ -39,7 +49,11 @@ class Solution(object):
         return sum(res)
 
 
+    # 区间问题
     # 435. Non-overlapping Intervals(Medium)
+    # 无重叠区间，找到需要移除区间的最小数量，使剩余区间不重复
+    # 等价于尽量多不重叠的区间
+    # 选择的区间结尾越小，余留给其他区间的空间就越大，能保留更多的区间
     def areasOverlapIntervals(self, intervals):
         if len(intervals) <= 1:
             return 0
@@ -61,6 +75,8 @@ class Solution(object):
 
     # Basic Excises
     # 605. Can Place Flowers(Easy)
+    # 种花问题，话不能种在相邻位置
+    # 能否种n朵花
     def canPlaceFlowers(self, flowerbed, n):
         flowerbed = [0] +  flowerbed + [0]
         avaliable = 0
@@ -77,6 +93,9 @@ class Solution(object):
 
     # Basic Excises
     # 452. Minimum Number of Arrows to Burst Balloons(Medium)
+    # 用最少数量的箭引爆气球
+    # 同区间问题
+    # 尽量保留重叠区间
     def findMinArrowShots(self, points):
         n = len(points)
         if n <= 0:
@@ -95,20 +114,21 @@ class Solution(object):
 
         return arrows
 
-    
+
     # Basic Excises
     # 763. Partition Labels(Medium)
+    # 划分字母区间
     # 为了满足贪心策略，需要预处理
     def partitionLabels(self, S):
         n = len(S)
         points = {}
-        
+
         for i in range(n):
             if S[i] in points:
                 points[S[i]][-1] = i
             else:
                 points[S[i]] = [i, i]
-        labels = list(points.values())        
+        labels = list(points.values())
         labels = sorted(labels, key=lambda x: x[0])
 
         res = [labels[0]]
@@ -118,7 +138,7 @@ class Solution(object):
                 res[-1][1] = max(res[-1][1], labels[i][1])
             else:
                 res.append(labels[i])
-   
+
         return [i[1] - i[0] + 1 for i in res]
 
 
@@ -128,7 +148,7 @@ class Solution(object):
     分情况：
     1. 单独交易日：今天买入，明天卖出，收益：p2 - p1;
     2. 连续上涨日：今天买入，最后一天卖出，收益：pn - p1 = (p2 - p1) + (p3 - p2) + ... + (pn - pn-1)
-                 等价于每天都在买卖；
+                等价于每天都在买卖；
     3. 连续下降日：不买.
 
     可见，每天都要计算收益.
@@ -136,16 +156,17 @@ class Solution(object):
     def maxProfit(self, prices):
         n = len(prices)
         profit = 0
-        
+
         for i in range(1, n):
             if prices[i] > prices[i-1]:
                 profit += (prices[i] - prices[i-1])
-        
+
         return profit
 
-    
+
     # Harder Excises
     # 406. Queue Reconstruction by Height(Medium)
+    # 根据身高重建队列
     def reconstructQueue(self, people):
         people = sorted(people, key=lambda x: (x[0], -x[1])) # cow beer
         n = len(people)
@@ -165,7 +186,9 @@ class Solution(object):
 
 
     # Harder Excises
-    # 665. Non-decreasing Array(Easy)
+    # 665. Non-decreasing Array(Medium)
+    # 非递减数列
+    # 最多改变一个元素，能否将数组变为非递减数组
     def checkPossibility(self, nums):
         if len(nums) == 1:
             return True
@@ -186,9 +209,7 @@ class Solution(object):
                 return False
 
         return True
-              
 
-        
 
 if __name__ == '__main__':
     s = Solution()
@@ -199,7 +220,7 @@ if __name__ == '__main__':
     # res = s.findMinArrowShots([[2,3],[2,3]])
     # res = s.partitionLabels("eaaaabaaec")
     # res = s.maxProfit([1, 2, 3, 4, 5])
-    # res = s.reconstructQueue([[7,0],[4,4],[7,1],[5,0],[6,1],[5,2]])
-    res = s.checkPossibility([4, 2, 3])
+    res = s.reconstructQueue([[7,0],[4,4],[7,1],[5,0],[6,1],[5,2]])
+    # res = s.checkPossibility([4, 2, 3])
 
     print(res)
