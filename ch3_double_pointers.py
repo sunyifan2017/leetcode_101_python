@@ -71,7 +71,7 @@ class Solution(object):
         while True:
             if not fast.next or not fast:
                 return None
-            
+
             fast = fast.next.next
             slow = slow.next
 
