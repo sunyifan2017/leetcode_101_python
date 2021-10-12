@@ -1,6 +1,9 @@
 """
 贪心算法采用贪心的策略，保证每次操作都是局部最优
+且局部结果互不干涉/独立
 从而使最后得到的结果
+
+贪心经常会涉及到排序
 """
 class Solution(object):
     # 分配问题
@@ -81,7 +84,7 @@ class Solution(object):
         flowerbed = [0] +  flowerbed + [0]
         avaliable = 0
         for i in range(1, len(flowerbed)-1):
-            if flowerbed[i-1] == 0 and flowerbed[i+1] == 0 and flowerbed[i] != 1:
+            if flowerbed[i-1] == 0 and flowerbed[i+1] == 0 and flowerbed[i] == 0:
                 flowerbed[i] = 1
                 avaliable += 1
 
@@ -96,6 +99,9 @@ class Solution(object):
     # 用最少数量的箭引爆气球
     # 同区间问题
     # 尽量保留重叠区间
+    # 所有气球中右边界位置最靠左的那一个，那么一定有一支箭的射出位置就是它的右边界
+    # 否则就没有箭可以将其引爆了
+    # 将这支箭引爆的所有气球移除
     def findMinArrowShots(self, points):
         n = len(points)
         if n <= 0:
