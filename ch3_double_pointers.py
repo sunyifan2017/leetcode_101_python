@@ -22,7 +22,7 @@ class Solution(object):
         while left < right:
             tmp = numbers[left] + numbers[right]
             if tmp == target:
-                return [left + 1, right + 1]
+                return [left  + 1, right + 1]
 
             elif tmp < target:
                 left += 1
@@ -137,9 +137,6 @@ class Solution(object):
         l = 0
         r = int(c ** 0.5)
 
-        if l == r:
-            return True
-
         while l <= r:
             tmp = l * l + r * r
             if tmp > c:
@@ -190,13 +187,13 @@ class Solution(object):
     # 通过删除字符匹配到字典里最长单词
     # 归并2个有序数组的变形题
     def findLongestWord(self, s, dictionary):
-        longest = 0
-        pos = -1
-        for i, word in enumerate(dictionary):
+        max_len = 0
+        ans = ''
+
+        for word in dictionary:
             p1 = len(s) - 1
             p2 = len(word) - 1
-
-            while p1 >= 0 and p2 >= 0:
+            while p1 > -1 and p2 > -1:
                 if s[p1] == word[p2]:
                     p1 -= 1
                     p2 -= 1
@@ -204,17 +201,14 @@ class Solution(object):
                     p1 -= 1
 
             if p2 == -1:
-                if len(word) > longest:
-                    longest = len(word)
-                    pos = i
-                elif len(word) == longest:
-                    if word < dictionary[pos]:
-                        pos = i
+                if len(word) > max_len:
+                    max_len = len(word)
+                    ans = word
+                elif len(word) == max_len:
+                    if word < ans:
+                        ans = word
 
-        if pos != -1:
-            return dictionary[pos]
-        else:
-            return ''
+        return ans
 
 
     # Harder Excises
@@ -231,11 +225,11 @@ if __name__ == '__main__':
     s = Solution()
     # res = s.twoSum([2, 7, 11, 15], 9)
     # res = s.merge([0], 0, [1], 1)
-    res = s.minWindow("ADOBECODEBANC", "ABC")
-    # res = s.minWindow("aa", "a")
+    # res = s.minWindow("ADOBECODEBANC", "ABC")
+    # res = s.minWindow("bba", "ab")
     # res = s.judgeSquareSum(1000000)
     # res = s.validPalindrome("aguokepatgbnvfqmgmlcupuufxoohdfpgjdmysgvhmvffcnqxjjxqncffvmhvgsymdjgpfdhooxfuupuculmgmqfvnbgtapekouga")
-    # res = s.findLongestWord("abpcplea", ["a","b","c"])
+    res = s.findLongestWord("abpcplea", ["a","b","c"])
     # res = s.findLongestWord("abce", ["abe","abc"])
 
     print(res)
