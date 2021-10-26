@@ -59,13 +59,12 @@ class Solution(object):
     # x^2 = a
     # f(x) = x^2 - a = 0的解
     # f'(x) = 2*x
-    # x_{n+1} = (x_n + a / x+n) / 2
+    # x_{n+1} = (x_n + a / x_n) / 2
     def mySqrt_Newton(self, a):
         x = a
         while x*x > a:
-            x = (x + a / x) // 2
-
-        return int(x)
+            x = (x + a // x) // 2
+        return x
 
 
     # 查找区间
@@ -272,9 +271,9 @@ if __name__ == '__main__':
     s = Solution()
     # res = s.mySqrt(3)
     # res = s.mySqrt_template(0)
-    res = s.mySqrt_Newton(0)
+    # res = s.mySqrt_Newton(0)
     # res = s.searchRange([5, 7, 7, 8, 8, 10], 8)
-    # res = s.searchRange_template([1, 2], 1)
+    res = s.searchRange_template([5, 7, 7, 8, 8, 10], 8)
     # res = s.search([2, 5, 6, 0, 0, 1, 2], 3)
     # res = s.search([5, 1, 3], 3)
     # res = s.findMin([3, 3, 1, 3])
